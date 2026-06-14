@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sounddevice
+soundfile
+numpy
+scipy
+websockets
+python-multipart
+pydantic

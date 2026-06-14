@@ -10,12 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "buffer": "^6.0.3",
+    "clsx": "^2.0.0",
     "lucide-react": "^0.263.1",
+    "music-metadata-browser": "^2.5.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tailwind-merge": "^1.14.0",
     "wavesurfer.js": "^7.0.0",
-    "clsx": "^2.0.0",
-    "tailwind-merge": "^1.14.0"
+    "web-audio-beat-detector": "^8.2.36"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
