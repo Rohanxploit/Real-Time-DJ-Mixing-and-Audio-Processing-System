@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Deck from './components/Deck/Deck';
 import Mixer from './components/Mixer/Mixer';
 import TrackLibrary from './components/Library/TrackLibrary';
-import TimelineEditor, { TimelineClip } from './components/Timeline/TimelineEditor';
+
 import { MonitorSpeaker, Mic, Library, Hash } from 'lucide-react';
 import { getMixer, startRecording, stopRecording } from './lib/audioEngine';
 import { useMidi } from './lib/useMidi';
@@ -13,7 +13,6 @@ function App() {
   const [masterVolume, setMasterVolume] = useState(80);
 
   const [libraryTracks, setLibraryTracks] = useState<any[]>([]);
-  const [timelineClips, setTimelineClips] = useState<TimelineClip[]>([]);
 
   const [devices, setDevices] = useState<any[]>([]);
   const [masterDeviceId, setMasterDeviceId] = useState<string>('default');
@@ -73,28 +72,6 @@ function App() {
     } else {
       setBpmB(Number(trackData.bpm) || 0);
     }
-
-    // Parse duration string like "3:45"
-    let durationSeconds = 120;
-    if (typeof trackData.duration === 'string') {
-      const parts = trackData.duration.split(':');
-      if (parts.length === 2) {
-        durationSeconds = parseInt(parts[0]) * 60 + parseInt(parts[1]);
-      }
-    }
-
-    // Add visual representation to timeline
-    setTimelineClips(prev => [
-      ...prev,
-      {
-        id: Math.random().toString(36).substr(2, 9),
-        file_path: trackData.title,
-        start_time: 0,
-        duration: durationSeconds,
-        track_index: deckId === 'A' ? 0 : 1,
-        title: trackData.title
-      }
-    ]);
   };
 
   const toggleRecording = async () => {
@@ -221,9 +198,8 @@ function App() {
             <Mixer crossfader={crossfader} setCrossfader={setCrossfader} />
             <Deck id="B" title="DECK B" color="orange" onTrackLoaded={(data) => handleTrackLoaded('B', data)} onBpmDetected={setBpmB} targetBpm={bpmA} showPadNumbers={showPadNumbers} />
           </main>
+// End of main content area
         </div>
-
-        <TimelineEditor clips={timelineClips} setClips={setTimelineClips} />
       </div>
     </div>
   );
