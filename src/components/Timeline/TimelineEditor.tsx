@@ -154,18 +154,37 @@ export default function TimelineEditor({ clips, setClips }: TimelineEditorProps)
               onDrop={(e) => handleDrop(e, trackIndex)}
               className="flex-1 border-b border-zinc-800/30 relative hover:bg-zinc-900/30 transition-colors"
             >
-              {clips.filter(c => c.track_index === trackIndex).map(clip => (
-                <div 
-                  key={clip.id}
-                  className="absolute top-1 bottom-1 bg-cyan-500/20 border border-cyan-500/50 rounded flex items-center px-2 text-[10px] font-bold text-cyan-200 overflow-hidden"
-                  style={{ 
-                    left: `${clip.start_time * PIXELS_PER_SECOND}px`,
-                    width: `${clip.duration * PIXELS_PER_SECOND}px`
-                  }}
-                >
-                  <span className="truncate">{clip.title}</span>
-                </div>
-              ))}
+              {clips.filter(c => c.track_index === trackIndex).map(clip => {
+                // Generate a pseudo-random waveform based on the clip ID
+                const seed = clip.id.charCodeAt(0) || 1;
+                const numBars = Math.max(10, Math.floor(clip.duration * PIXELS_PER_SECOND / 4));
+                const bars = Array.from({ length: numBars }).map((_, i) => {
+                  const height = 20 + Math.abs(Math.sin((i + seed) * 0.3) * 60) + Math.abs(Math.cos(i * 0.7) * 20);
+                  return Math.min(100, height);
+                });
+
+                return (
+                  <div 
+                    key={clip.id}
+                    className="absolute top-1 bottom-1 bg-zinc-800/80 border border-zinc-700/80 rounded flex items-center overflow-hidden group cursor-pointer"
+                    style={{ 
+                      left: `${clip.start_time * PIXELS_PER_SECOND}px`,
+                      width: `${clip.duration * PIXELS_PER_SECOND}px`
+                    }}
+                  >
+                    {/* Background Waveform Visual */}
+                    <div className="absolute inset-0 flex items-center justify-between px-1 opacity-40 group-hover:opacity-70 transition-opacity pointer-events-none gap-[1px]">
+                      {bars.map((h, i) => (
+                        <div key={i} className="w-1 bg-cyan-400 rounded-full" style={{ height: `${h}%` }} />
+                      ))}
+                    </div>
+                    {/* Title Overlay */}
+                    <div className="absolute inset-x-0 bottom-0 px-2 py-0.5 bg-gradient-to-t from-black/80 to-transparent">
+                      <span className="text-[9px] font-bold text-cyan-100 truncate block">{clip.title}</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           ))}
         </div>
