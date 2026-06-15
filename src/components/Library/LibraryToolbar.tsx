@@ -6,6 +6,7 @@ interface LibraryToolbarProps {
   showDeckHints: boolean;
   filteredCount: number;
   totalCount: number;
+  onTrimClick?: () => void;
 }
 
 export default function LibraryToolbar({
@@ -14,13 +15,22 @@ export default function LibraryToolbar({
   showDeckHints,
   filteredCount,
   totalCount,
+  onTrimClick,
 }: LibraryToolbarProps) {
   return (
     <div className="flex items-center gap-4 p-3 border-b border-zinc-800/50 bg-zinc-950/30">
-      <button className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
-        <FolderOpen size={14} aria-hidden="true" />
-        Library
-      </button>
+      <div className="flex gap-2">
+        <button className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-300 transition-colors">
+          <FolderOpen size={14} aria-hidden="true" />
+          Library
+        </button>
+        <button 
+          onClick={onTrimClick}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-gradient-to-r from-cyan-600/50 to-blue-600/50 hover:from-cyan-500/50 hover:to-blue-500/50 border border-cyan-500/30 text-xs font-semibold text-cyan-50 transition-colors shadow-lg"
+        >
+          Trim Clip
+        </button>
+      </div>
 
       {showDeckHints && (
         <div className="flex gap-2 text-[10px] text-zinc-500">

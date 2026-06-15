@@ -132,7 +132,9 @@ export default function Deck({ id, title, color, onTrackLoaded, onBpmDetected, t
 
 
   return (
-    <div className={cn('flex-1 rounded-xl border flex flex-col p-4 shadow-lg bg-gradient-to-br', theme.bg, theme.border)}>
+    <div className={cn('flex-1 rounded-xl border-2 flex flex-col p-4 shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.05)] bg-gradient-to-b from-[#111113] to-[#0a0a0c] backdrop-blur-xl relative overflow-hidden', theme.border)}>
+      {/* Glossy top highlight */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none rounded-t-xl" />
       <input ref={fileInputRef} type="file" accept="audio/mpeg,audio/wav,audio/flac" className="hidden" onChange={handleFileUpload} />
 
       <DeckHeader
@@ -159,10 +161,10 @@ export default function Deck({ id, title, color, onTrackLoaded, onBpmDetected, t
         <div className="flex-1 flex flex-col justify-end gap-4">
           <HotCues hotCues={hotCues} isLoaded={isLoaded} cueActiveClass={theme.cueActive} onCueClick={handleHotCue} />
 
-          <div className="flex gap-2">
-            <button onClick={() => setLoopIn(currentTime)} disabled={!isLoaded} className="flex-1 py-1 text-[10px] font-bold rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-400 border border-zinc-700 disabled:opacity-30 transition-colors">IN</button>
-            <button onClick={() => { if (loopIn !== null && currentTime > loopIn) { setLoopOut(currentTime); setLoopActive(true); } }} disabled={!isLoaded || loopIn === null} className="flex-1 py-1 text-[10px] font-bold rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-400 border border-zinc-700 disabled:opacity-30 transition-colors">OUT</button>
-            <button onClick={() => setLoopActive(!loopActive)} disabled={!isLoaded || loopIn === null || loopOut === null} className={cn('flex-1 py-1 text-[10px] font-bold rounded border disabled:opacity-30 transition-colors', loopActive ? theme.cueActive : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-400 border-zinc-700')}>LOOP</button>
+          <div className="flex gap-2 bg-[#111113] p-2 rounded-lg border border-zinc-800 shadow-inner">
+            <button onClick={() => setLoopIn(currentTime)} disabled={!isLoaded} className="flex-1 py-1.5 text-[10px] font-black tracking-wider rounded-md bg-gradient-to-b from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 text-zinc-300 border border-zinc-600 shadow-sm disabled:opacity-30 active:scale-95 transition-all">IN</button>
+            <button onClick={() => { if (loopIn !== null && currentTime > loopIn) { setLoopOut(currentTime); setLoopActive(true); } }} disabled={!isLoaded || loopIn === null} className="flex-1 py-1.5 text-[10px] font-black tracking-wider rounded-md bg-gradient-to-b from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 text-zinc-300 border border-zinc-600 shadow-sm disabled:opacity-30 active:scale-95 transition-all">OUT</button>
+            <button onClick={() => setLoopActive(!loopActive)} disabled={!isLoaded || loopIn === null || loopOut === null} className={cn('flex-1 py-1.5 text-[10px] font-black tracking-wider rounded-md border shadow-sm disabled:opacity-30 active:scale-95 transition-all', loopActive ? theme.cueActive : 'bg-gradient-to-b from-zinc-700 to-zinc-800 hover:from-zinc-600 hover:to-zinc-700 text-zinc-300 border-zinc-600')}>LOOP</button>
           </div>
 
           <TransportControls isPlaying={isPlaying} isLoaded={isLoaded} isCueOn={isCueOn} onRestart={handleRestart} onToggleCue={toggleCue} onTogglePlay={togglePlay} />

@@ -111,7 +111,7 @@ async def set_eq(deck_id: str, req: EQRequest):
     return {"status": "ok"}
 
 @app.post("/api/deck/{deck_id}/filter")
-async def set_filter(deck_id: str, val: float = None, type: str = None, freq: float = None):
+async def set_filter(deck_id: str, val: float | None = None, type: str | None = None, freq: float | None = None):
     deck = engine.deck_a if deck_id.lower() == 'a' else engine.deck_b
     # Support both direct knob value (val 0-100) or type/freq logic if frontend passes it
     if val is not None:
@@ -119,8 +119,8 @@ async def set_filter(deck_id: str, val: float = None, type: str = None, freq: fl
     return {"status": "ok"}
 
 class FXRequest(BaseModel):
-    delay: float = None
-    dist: float = None
+    delay: float | None = None
+    dist: float | None = None
 
 @app.post("/api/deck/{deck_id}/fx")
 async def set_fx(deck_id: str, req: FXRequest):
@@ -129,9 +129,9 @@ async def set_fx(deck_id: str, req: FXRequest):
     return {"status": "ok"}
 
 class LoopRequest(BaseModel):
-    in_sec: float = None
-    out_sec: float = None
-    active: bool = None
+    in_sec: float | None = None
+    out_sec: float | None = None
+    active: bool | None = None
 
 @app.post("/api/deck/{deck_id}/loop")
 async def set_loop(deck_id: str, req: LoopRequest):
@@ -146,7 +146,7 @@ async def set_crossfader(value: float):
     return {"status": "ok"}
 
 @app.post("/api/mixer/volume")
-async def set_volume(master: float = None, cue: float = None):
+async def set_volume(master: float | None = None, cue: float | None = None):
     if master is not None:
         engine.mixer.set_master_volume(master)
     if cue is not None:
@@ -218,3 +218,33 @@ async def download_recording(filename: str):
     if os.path.exists(filepath):
         return FileResponse(filepath, media_type="audio/wav", filename=filename)
     return {"status": "error", "message": "File not found"}
+
+@app.post("/api/library/trim")
+async def trim_audio(start_sec: float = Form(...), end_sec: float = Form(...), file: UploadFile = File(...)):
+    file_path = os.path.join(TEMP_DIR, file.filename)
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    try:
+        data, samplerate = sf.read(file_path)
+        
+        start_frame = int(start_sec * samplerate)
+        end_frame = int(end_sec * samplerate)
+        
+        # Ensure bounds
+        start_frame = max(0, min(start_frame, len(data)))
+        end_frame = max(0, min(end_frame, len(data)))
+        if start_frame >= end_frame:
+            return {"status": "error", "message": "Invalid trim bounds"}
+            
+        trimmed_data = data[start_frame:end_frame]
+        
+        base, ext = os.path.splitext(file.filename)
+        new_filename = f"{base}_trimmed{ext}"
+        new_filepath = os.path.join(TEMP_DIR, new_filename)
+        
+        sf.write(new_filepath, trimmed_data, samplerate)
+        
+        return FileResponse(new_filepath, media_type="audio/wav", filename=new_filename)
+    except Exception as e:
+        return {"status": "error", "message": str(e)}

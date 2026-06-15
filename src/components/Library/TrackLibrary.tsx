@@ -32,10 +32,13 @@ function sortTracks(tracks: TrackData[], key: SortKey, dir: SortDir): TrackData[
   });
 }
 
+import TrimModal from './TrimModal';
+
 export default function TrackLibrary({ tracks, onLoadToDeck }: TrackLibraryProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('title');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
+  const [showTrimModal, setShowTrimModal] = useState(false);
 
   const handleSort = (key: SortKey) => {
     if (key === sortKey) {
@@ -67,6 +70,7 @@ export default function TrackLibrary({ tracks, onLoadToDeck }: TrackLibraryProps
         showDeckHints={!!onLoadToDeck}
         filteredCount={filteredAndSorted.length}
         totalCount={tracks.length}
+        onTrimClick={() => setShowTrimModal(true)}
       />
 
       <div className="flex-1 overflow-auto" role="region" aria-label="Track library">
@@ -97,6 +101,8 @@ export default function TrackLibrary({ tracks, onLoadToDeck }: TrackLibraryProps
           </tbody>
         </table>
       </div>
+
+      {showTrimModal && <TrimModal onClose={() => setShowTrimModal(false)} />}
     </>
   );
 }

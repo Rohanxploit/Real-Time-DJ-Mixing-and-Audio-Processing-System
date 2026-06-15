@@ -8,3 +8,8 @@ node_modules/
 __pycache__/
 *.pyc
 venv/
+
+# Recordings and Builds
+backend/recordings/
+dist/
+

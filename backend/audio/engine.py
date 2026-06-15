@@ -23,8 +23,10 @@ class AudioEngine:
         
         self.master_stream = None
         self.cue_stream = None
+        self.mic_stream = None
         
         self.cue_queue = queue.Queue(maxsize=10) # Small buffer
+        self.mic_queue = queue.Queue(maxsize=20)
         self.is_running = False
         
         self.recording_file = None
@@ -55,11 +57,28 @@ class AudioEngine:
         if self.is_running:
             self.restart()
 
+    def mic_callback(self, indata, frames, time, status):
+        if status:
+            print(f"Mic Status: {status}")
+        try:
+            self.mic_queue.put_nowait(indata.copy())
+        except queue.Full:
+            pass
+
     def master_callback(self, outdata, frames, time, status):
         if status:
             print(f"Master Status: {status}")
             
+        mic_buffer = np.zeros((frames, self.channels), dtype=np.float32)
+        try:
+            mic_data = self.mic_queue.get_nowait()
+            if len(mic_data) == frames:
+                mic_buffer = mic_data
+        except queue.Empty:
+            pass
+            
         master_buffer, cue_buffer = self.mixer.process(frames)
+        master_buffer += mic_buffer
         
         # Write to master output
         outdata[:] = master_buffer
@@ -108,6 +127,22 @@ class AudioEngine:
         except Exception as e:
             print(f"Failed to start master stream: {e}")
             
+        # Start Mic Stream
+        try:
+            # Clear queue
+            while not self.mic_queue.empty():
+                self.mic_queue.get()
+                
+            self.mic_stream = sd.InputStream(
+                channels=self.channels,
+                samplerate=self.sample_rate,
+                blocksize=self.block_size,
+                callback=self.mic_callback
+            )
+            self.mic_stream.start()
+        except Exception as e:
+            print(f"Failed to start mic stream: {e}")
+            
         # Start Cue Stream if different
         if self.cue_device_id is not None and self.cue_device_id != self.master_device_id:
             try:
@@ -136,6 +171,10 @@ class AudioEngine:
             self.cue_stream.stop()
             self.cue_stream.close()
             self.cue_stream = None
+        if self.mic_stream:
+            self.mic_stream.stop()
+            self.mic_stream.close()
+            self.mic_stream = None
 
     def restart(self):
         self.stop()

@@ -24,9 +24,11 @@ export default function TransportControls({
         onClick={onRestart}
         disabled={!isLoaded}
         title="Restart track"
-        className="w-12 h-12 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center transition-transform active:scale-95 shadow-lg border border-zinc-700/50 text-zinc-300 disabled:opacity-30"
+        className="w-14 h-14 rounded-full bg-gradient-to-b from-zinc-700 to-zinc-900 flex items-center justify-center transition-transform active:scale-95 shadow-[0_4px_10px_rgba(0,0,0,0.5),inset_0_2px_4px_rgba(255,255,255,0.1)] border border-zinc-800 text-zinc-300 disabled:opacity-30 hover:brightness-110"
       >
-        <RefreshCw size={20} />
+        <div className="w-10 h-10 rounded-full bg-[#18181b] shadow-inner flex items-center justify-center border border-zinc-800">
+          <RefreshCw size={18} />
+        </div>
       </button>
 
       <button
@@ -34,13 +36,15 @@ export default function TransportControls({
         disabled={!isLoaded}
         title="Toggle cue output (PFL)"
         className={cn(
-          'w-12 h-12 rounded-full flex items-center justify-center transition-transform shadow-lg border text-[10px] font-bold tracking-tighter disabled:opacity-30',
+          'w-16 h-16 rounded-full flex items-center justify-center transition-transform shadow-[0_4px_10px_rgba(0,0,0,0.5),inset_0_2px_4px_rgba(255,255,255,0.1)] border text-xs font-bold tracking-tighter disabled:opacity-30 active:scale-95',
           isCueOn
-            ? 'bg-amber-500 text-zinc-950 border-white'
-            : 'bg-zinc-800 text-amber-500 border-zinc-700/50 hover:bg-zinc-700'
+            ? 'bg-gradient-to-b from-amber-500 to-amber-600 text-zinc-950 border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.6)]'
+            : 'bg-gradient-to-b from-zinc-700 to-zinc-900 text-amber-500 border-zinc-800 hover:brightness-110'
         )}
       >
-        CUE
+        <div className={cn("w-12 h-12 rounded-full shadow-inner flex items-center justify-center border", isCueOn ? "bg-amber-400 border-amber-300" : "bg-[#18181b] border-zinc-800")}>
+          CUE
+        </div>
       </button>
 
       <button
@@ -48,13 +52,15 @@ export default function TransportControls({
         disabled={!isLoaded}
         title={isPlaying ? 'Pause' : 'Play'}
         className={cn(
-          'w-16 h-16 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-lg border disabled:opacity-30',
+          'w-20 h-20 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-[0_6px_12px_rgba(0,0,0,0.6),inset_0_2px_4px_rgba(255,255,255,0.1)] border disabled:opacity-30',
           isPlaying
-            ? 'bg-zinc-100 text-zinc-950 border-white'
-            : 'bg-zinc-800 text-zinc-100 border-zinc-700/50 hover:bg-zinc-700'
+            ? 'bg-gradient-to-b from-green-400 to-green-600 text-zinc-950 border-green-300 shadow-[0_0_25px_rgba(74,222,128,0.6)]'
+            : 'bg-gradient-to-b from-zinc-700 to-zinc-900 text-green-400 border-zinc-800 hover:brightness-110'
         )}
       >
-        {isPlaying ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
+        <div className={cn("w-16 h-16 rounded-full shadow-inner flex items-center justify-center border", isPlaying ? "bg-green-400 border-green-300" : "bg-[#18181b] border-zinc-800")}>
+          {isPlaying ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
+        </div>
       </button>
     </div>
   );

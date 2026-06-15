@@ -21,30 +21,45 @@ export default function VUMeter({ rms }: VUMeterProps) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
 
-    const draw = () => {
+      const draw = () => {
       const { width, height } = canvas;
       ctx.clearRect(0, 0, width, height);
 
-      const segCount = 12;
-      const segH = height / segCount - 1;
+      const segCount = 14;
+      const spacing = 2;
+      const segH = (height - (segCount - 1) * spacing) / segCount;
+      const colW = (width - spacing) / 2;
 
-      for (let i = 0; i < segCount; i++) {
-        const threshold = (segCount - 1 - i) / segCount;
-        const lit = levelRef.current * 3.0 >= threshold;
-        const y = i * (segH + 1);
+      // Simulate slight stereo difference
+      const lRms = levelRef.current;
+      const rRms = Math.max(0, levelRef.current + (Math.random() * 0.05 - 0.025));
 
-        if (i < 2) {
-          ctx.fillStyle = lit ? '#ef4444' : '#1f1f1f';
-        } else if (i < 5) {
-          ctx.fillStyle = lit ? '#f59e0b' : '#1f1f1f';
-        } else {
-          ctx.fillStyle = lit ? '#22c55e' : '#1f1f1f';
+      const drawColumn = (xOffset: number, rmsVal: number) => {
+        for (let i = 0; i < segCount; i++) {
+          const threshold = (segCount - 1 - i) / segCount;
+          const lit = rmsVal * 2.5 >= threshold;
+          const y = i * (segH + spacing);
+
+          let color = '#18181b'; // OFF color
+          let glow = 'transparent';
+
+          if (lit) {
+            if (i < 2) { color = '#ef4444'; glow = 'rgba(239, 68, 68, 0.5)'; }      // Red
+            else if (i < 5) { color = '#eab308'; glow = 'rgba(234, 179, 8, 0.5)'; } // Yellow
+            else { color = '#22c55e'; glow = 'rgba(34, 197, 94, 0.5)'; }            // Green
+          }
+
+          ctx.fillStyle = color;
+          ctx.shadowColor = lit ? glow : 'transparent';
+          ctx.shadowBlur = lit ? 8 : 0;
+          ctx.beginPath();
+          ctx.roundRect(xOffset, y, colW, segH, 1);
+          ctx.fill();
         }
+      };
 
-        ctx.beginPath();
-        ctx.roundRect(0, y, width, segH, 2);
-        ctx.fill();
-      }
+      drawColumn(0, lRms);
+      drawColumn(colW + spacing, rRms);
 
       animRef.current = requestAnimationFrame(draw);
     };
@@ -54,11 +69,11 @@ export default function VUMeter({ rms }: VUMeterProps) {
   }, []);
 
   return (
-    <div className="w-16 flex flex-col gap-0 items-center justify-center bg-zinc-950 p-2 rounded-lg border border-zinc-800">
+    <div className="w-12 flex flex-col items-center justify-center bg-zinc-950/80 p-2 rounded border border-zinc-800 shadow-inner">
       <canvas
         ref={canvasRef}
-        width={48}
-        height={144}
+        width={32}
+        height={160}
         className="w-full"
         aria-label="Master VU meter"
       />

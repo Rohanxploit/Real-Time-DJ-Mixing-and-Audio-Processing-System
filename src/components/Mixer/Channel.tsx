@@ -24,6 +24,8 @@ interface ChannelProps {
   accentClass: string;
 }
 
+import VerticalSlider from './VerticalSlider';
+
 export default function Channel({ id, label, accentClass }: ChannelProps) {
   const [state, setState] = useState<ChannelState>(DEFAULT_CHANNEL_STATE);
 
@@ -46,36 +48,33 @@ export default function Channel({ id, label, accentClass }: ChannelProps) {
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="flex flex-col gap-3">
-        <Knob label="HI"  value={state.eqHigh} onChange={(v) => update({ eqHigh: v })} />
-        <Knob label="MID" value={state.eqMid}  onChange={(v) => update({ eqMid: v })}  />
-        <Knob label="LOW" value={state.eqLow}  onChange={(v) => update({ eqLow: v })}  />
+      <div className="flex gap-4 p-2 bg-[#18181b] rounded-lg border border-zinc-800 shadow-inner">
+        <VerticalSlider label="HI"  value={state.eqHigh} onChange={(v) => update({ eqHigh: v })} accentClass={accentClass} height={80} />
+        <VerticalSlider label="MID" value={state.eqMid}  onChange={(v) => update({ eqMid: v })} accentClass={accentClass} height={80} />
+        <VerticalSlider label="LOW" value={state.eqLow}  onChange={(v) => update({ eqLow: v })} accentClass={accentClass} height={80} />
       </div>
 
-      <div className="mt-2 mb-2">
-        <Knob
+      <div className="mt-2 mb-2 p-2 bg-[#18181b] rounded-lg border border-zinc-800 shadow-inner">
+        <VerticalSlider
           label="FILTER"
-          height="h-20"
+          height={60}
           value={state.filter}
           onChange={(v) => update({ filter: v })}
-          accentClass="accent-purple-400"
+          accentClass="text-purple-400"
         />
       </div>
 
       <div className="flex-1 relative flex justify-center py-2 h-32 w-full">
-        <input
-          type="range"
-          min={0}
-          max={100}
+        <VerticalSlider
+          label=""
+          height={120}
           value={state.volume}
-          onChange={(e) => update({ volume: Number(e.target.value) })}
-          className={`h-full w-1.5 bg-zinc-800 rounded-full appearance-none cursor-ns-resize ${accentClass}`}
-          style={{ writingMode: 'vertical-lr', direction: 'rtl' } as React.CSSProperties}
-          aria-label={`${label} volume`}
+          onChange={(v) => update({ volume: v })}
+          accentClass={accentClass}
         />
       </div>
 
-      <span className="text-[10px] font-bold text-zinc-500 tracking-wider">{label}</span>
+      <span className="text-xs font-black text-zinc-500 tracking-widest uppercase mt-1">{label}</span>
     </div>
   );
 }

@@ -47,18 +47,23 @@ export default function Mixer({ crossfader, setCrossfader }: MixerProps) {
   }, [crossfader]);
 
   return (
-    <div className="w-64 bg-zinc-900/50 rounded-xl border border-zinc-800/50 p-4 flex flex-col shadow-lg backdrop-blur-md">
-      <h2 className="text-xs font-bold tracking-widest text-center text-zinc-500 mb-4">
-        MIXER
+    <div className="w-80 bg-gradient-to-b from-[#111113] to-[#0a0a0c] rounded-xl border-2 border-zinc-800/80 p-5 flex flex-col shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.05)] backdrop-blur-xl relative overflow-hidden">
+      {/* Glossy top highlight */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none rounded-t-xl" />
+
+      <h2 className="text-[10px] font-black tracking-[0.3em] text-center text-zinc-500 mb-6 bg-zinc-900/50 py-1.5 rounded-full border border-zinc-800/50 mx-4 shadow-inner">
+        NEXUS MIXER
       </h2>
 
-      <div className="flex flex-1 gap-4 justify-center">
+      <div className="flex flex-1 gap-6 justify-center relative z-10">
         <Channel id="A" label="CH A" accentClass="accent-cyan-500" />
         <VUMeter rms={rms} />
-        <Channel id="B" label="CH B" accentClass="accent-blue-500" />
+        <Channel id="B" label="CH B" accentClass="accent-orange-500" />
       </div>
 
-      <SpectrumAnalyzer fft={fft} />
+      <div className="mt-6 mb-2">
+        <SpectrumAnalyzer fft={fft} />
+      </div>
       <Crossfader value={crossfader} onChange={setCrossfader} />
     </div>
   );
