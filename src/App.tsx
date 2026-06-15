@@ -217,9 +217,9 @@ function App() {
         <div className="flex-1 flex gap-4 min-h-0">
           {/* DJ Decks and Mixer */}
           <main className="flex-1 flex gap-4 min-w-0 min-h-0">
-            <Deck id="A" title="DECK A" color="cyan" onTrackLoaded={handleTrackLoaded} onBpmDetected={setBpmA} targetBpm={bpmB} showPadNumbers={showPadNumbers} />
+            <Deck id="A" title="DECK A" color="cyan" onTrackLoaded={(data) => handleTrackLoaded('A', data)} onBpmDetected={setBpmA} targetBpm={bpmB} showPadNumbers={showPadNumbers} />
             <Mixer crossfader={crossfader} setCrossfader={setCrossfader} />
-            <Deck id="B" title="DECK B" color="orange" onTrackLoaded={handleTrackLoaded} onBpmDetected={setBpmB} targetBpm={bpmA} showPadNumbers={showPadNumbers} />
+            <Deck id="B" title="DECK B" color="orange" onTrackLoaded={(data) => handleTrackLoaded('B', data)} onBpmDetected={setBpmB} targetBpm={bpmA} showPadNumbers={showPadNumbers} />
           </main>
         </div>
 
