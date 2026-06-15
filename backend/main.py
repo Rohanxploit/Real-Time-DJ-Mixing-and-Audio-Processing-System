@@ -56,7 +56,7 @@ async def set_routing(req: RoutingRequest):
 
 # --- Deck Control ---
 @app.post("/api/deck/{deck_id}/load")
-async def load_deck(deck_id: str, file: UploadFile = File(...)):
+def load_deck(deck_id: str, file: UploadFile = File(...)):
     deck = engine.deck_a if deck_id.lower() == 'a' else engine.deck_b
     
     file_path = os.path.join(TEMP_DIR, file.filename)
@@ -248,3 +248,22 @@ async def trim_audio(start_sec: float = Form(...), end_sec: float = Form(...), f
         return FileResponse(new_filepath, media_type="audio/wav", filename=new_filename)
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+# --- Timeline API ---
+class TimelineSyncRequest(BaseModel):
+    clips: list[dict]
+
+@app.post("/api/timeline/sync")
+async def sync_timeline(req: TimelineSyncRequest):
+    engine.timeline_mixer.sync_clips(req.clips)
+    return {"status": "ok"}
+
+@app.post("/api/timeline/play")
+async def play_timeline():
+    engine.timeline_mixer.play()
+    return {"status": "ok"}
+
+@app.post("/api/timeline/stop")
+async def stop_timeline():
+    engine.timeline_mixer.stop()
+    return {"status": "ok"}

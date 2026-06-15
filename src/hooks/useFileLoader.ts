@@ -43,14 +43,21 @@ export function useFileLoader({
       decodedData =
         (await mixer.ctx?.decodeAudioData(arrayBuffer)) ??
         new AudioBuffer({ length: 1, sampleRate: 44100 });
-      await loadTrackToBackend(id, file);
     } catch (err: any) {
-      console.error('[Deck] Audio decode/load failed:', err);
-      alert(`Could not decode or upload "${file.name}".\nReason: ${err.message}`);
+      console.error('[Deck] Audio decode failed:', err);
+      alert(`Could not decode audio file "${file.name}".`);
       setIsProcessing(false);
       return;
     }
 
+    // Wait for the backend to finish uploading so we don't have a race condition when playing
+    try {
+      await loadTrackToBackend(id, file);
+    } catch (err: any) {
+      console.warn('[Deck] Backend upload failed (audio will not play):', err);
+    }
+
+    // Unblock the UI
     onLoaded(decodedData);
 
     const waveUrl = URL.createObjectURL(file);

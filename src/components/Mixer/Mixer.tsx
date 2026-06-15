@@ -47,7 +47,7 @@ export default function Mixer({ crossfader, setCrossfader }: MixerProps) {
   }, [crossfader]);
 
   return (
-    <div className="w-80 bg-gradient-to-b from-[#111113] to-[#0a0a0c] rounded-xl border-2 border-zinc-800/80 p-5 flex flex-col shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.05)] backdrop-blur-xl relative overflow-hidden">
+    <div className="min-w-fit bg-gradient-to-b from-[#111113] to-[#0a0a0c] rounded-xl border-2 border-zinc-800/80 p-5 flex flex-col shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.05)] backdrop-blur-xl relative overflow-hidden">
       {/* Glossy top highlight */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none rounded-t-xl" />
 

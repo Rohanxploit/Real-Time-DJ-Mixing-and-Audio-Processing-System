@@ -7,6 +7,7 @@ import os
 import time
 from .deck import Deck
 from .mixer import Mixer
+from .timeline_mixer import TimelineMixer
 
 class AudioEngine:
     def __init__(self):
@@ -17,6 +18,7 @@ class AudioEngine:
         self.deck_a = Deck()
         self.deck_b = Deck()
         self.mixer = Mixer(self.deck_a, self.deck_b)
+        self.timeline_mixer = TimelineMixer(self.sample_rate)
         
         self.master_device_id = None
         self.cue_device_id = None
@@ -79,6 +81,10 @@ class AudioEngine:
             
         master_buffer, cue_buffer = self.mixer.process(frames)
         master_buffer += mic_buffer
+        
+        # Add timeline sequencer output
+        timeline_buffer = self.timeline_mixer.process(frames)
+        master_buffer += timeline_buffer
         
         # Write to master output
         outdata[:] = master_buffer

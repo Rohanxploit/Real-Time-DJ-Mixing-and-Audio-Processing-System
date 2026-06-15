@@ -19,9 +19,9 @@ export default function WaveformArea({
   onSeek,
 }: WaveformAreaProps) {
   return (
-    <div className="bg-zinc-950/80 rounded-lg p-2 mb-4 border border-zinc-800/50 flex flex-col gap-2">
+    <div className="flex-1 bg-zinc-950/80 rounded-lg p-2 mb-4 border border-zinc-800/50 flex flex-col gap-2 min-h-[60px]">
       {/* WaveSurfer mounts here — div must always be in DOM for the ref to work */}
-      <div ref={waveformRef} className="w-full h-[60px]" />
+      <div ref={waveformRef} className="w-full flex-1" />
 
       {/* Native seek bar as ground-truth scrubber */}
       <div className="px-1">

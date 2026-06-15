@@ -47,34 +47,34 @@ export default function Channel({ id, label, accentClass }: ChannelProps) {
   }, [state.filter, id]);
 
   return (
-    <div className="flex flex-col items-center gap-3">
-      <div className="flex gap-4 p-2 bg-[#18181b] rounded-lg border border-zinc-800 shadow-inner">
-        <VerticalSlider label="HI"  value={state.eqHigh} onChange={(v) => update({ eqHigh: v })} accentClass={accentClass} height={80} />
-        <VerticalSlider label="MID" value={state.eqMid}  onChange={(v) => update({ eqMid: v })} accentClass={accentClass} height={80} />
-        <VerticalSlider label="LOW" value={state.eqLow}  onChange={(v) => update({ eqLow: v })} accentClass={accentClass} height={80} />
+    <div className="flex flex-col items-center gap-2 w-full">
+      <div className="flex gap-3 p-1.5 bg-[#18181b] rounded-lg border border-zinc-800 shadow-inner">
+        <VerticalSlider label="HI"  value={state.eqHigh} onChange={(v) => update({ eqHigh: v })} accentClass={accentClass} height={70} />
+        <VerticalSlider label="MID" value={state.eqMid}  onChange={(v) => update({ eqMid: v })} accentClass={accentClass} height={70} />
+        <VerticalSlider label="LOW" value={state.eqLow}  onChange={(v) => update({ eqLow: v })} accentClass={accentClass} height={70} />
       </div>
 
-      <div className="mt-2 mb-2 p-2 bg-[#18181b] rounded-lg border border-zinc-800 shadow-inner">
-        <VerticalSlider
-          label="FILTER"
-          height={60}
-          value={state.filter}
-          onChange={(v) => update({ filter: v })}
-          accentClass="text-purple-400"
-        />
-      </div>
+      <div className="flex gap-3 w-full justify-center">
+        <div className="p-2 bg-[#18181b] rounded-lg border border-zinc-800 shadow-inner flex flex-col justify-end">
+          <VerticalSlider
+            label="FILTER"
+            height={90}
+            value={state.filter}
+            onChange={(v) => update({ filter: v })}
+            accentClass="accent-purple-500"
+          />
+        </div>
 
-      <div className="flex-1 relative flex justify-center py-2 h-32 w-full">
-        <VerticalSlider
-          label=""
-          height={120}
-          value={state.volume}
-          onChange={(v) => update({ volume: v })}
-          accentClass={accentClass}
-        />
+        <div className="p-2 bg-[#18181b] rounded-lg border border-zinc-800 shadow-inner flex flex-col justify-end">
+          <VerticalSlider
+            label={label}
+            height={90}
+            value={state.volume}
+            onChange={(v) => update({ volume: v })}
+            accentClass={accentClass}
+          />
+        </div>
       </div>
-
-      <span className="text-xs font-black text-zinc-500 tracking-widest uppercase mt-1">{label}</span>
     </div>
   );
 }

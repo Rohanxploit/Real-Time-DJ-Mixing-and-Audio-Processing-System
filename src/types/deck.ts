@@ -15,6 +15,7 @@ export interface DeckProps {
   onTrackLoaded: (trackData: TrackData) => void;
   onBpmDetected: (bpm: number) => void;
   targetBpm: number;
+  showPadNumbers?: boolean;
 }
 
 export const THEME = {

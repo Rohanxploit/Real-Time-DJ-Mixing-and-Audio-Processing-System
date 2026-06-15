@@ -13,6 +13,7 @@ export default function TrackRow({ track, onLoadToDeck }: TrackRowProps) {
 
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('trackId', track.id);
+    e.dataTransfer.setData('application/json', JSON.stringify(track));
     e.dataTransfer.effectAllowed = 'copy';
     setDragging(true);
   };
